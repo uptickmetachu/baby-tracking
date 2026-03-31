@@ -240,14 +240,12 @@ header h1 {
   color: var(--text-light);
 }
 
-.entry-form input,
-.entry-form select {
+.entry-form input {
   padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: 8px;
   font-size: 1rem;
   color: var(--text);
-  background: var(--card-bg);
 }
 
 .form-actions {
