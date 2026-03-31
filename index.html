@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#7c5cbf">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Baby Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.svg">
+  <link rel="apple-touch-icon" href="icons/icon-192.svg">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+  <header>
+    <h1>Baby Tracker</h1>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="log">Log</button>
+    <button class="tab" data-tab="today">Today</button>
+    <button class="tab" data-tab="trends">Trends</button>
+  </nav>
+
+  <!-- LOG TAB -->
+  <section id="tab-log" class="tab-content active">
+    <div class="date-picker">
+      <button id="date-prev" aria-label="Previous day">&larr;</button>
+      <input type="date" id="log-date">
+      <button id="date-next" aria-label="Next day">&rarr;</button>
+    </div>
+
+    <!-- Sleep Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Sleep</h2>
+        <span id="sleep-total" class="daily-total"></span>
+      </div>
+      <div id="sleep-list" class="entry-list"></div>
+      <button id="add-sleep-btn" class="add-btn">+ Add Sleep</button>
+      <form id="sleep-form" class="entry-form hidden">
+        <input type="hidden" id="sleep-edit-id">
+        <div class="form-row">
+          <label>Start <input type="time" id="sleep-start" required></label>
+          <label>End <input type="time" id="sleep-end"></label>
+        </div>
+        <label>Note <input type="text" id="sleep-note" placeholder="Optional note"></label>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Save</button>
+          <button type="button" class="btn-cancel" id="sleep-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Feed Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Feeds</h2>
+        <span id="feed-total" class="daily-total"></span>
+      </div>
+      <div id="feed-list" class="entry-list"></div>
+      <button id="add-feed-btn" class="add-btn">+ Add Feed</button>
+      <form id="feed-form" class="entry-form hidden">
+        <input type="hidden" id="feed-edit-id">
+        <div class="form-row">
+          <label>Time <input type="time" id="feed-time" required></label>
+          <label>Volume (mL) <input type="number" id="feed-volume" min="0" step="5" required></label>
+        </div>
+        <label>Note <input type="text" id="feed-note" placeholder="Optional note"></label>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Save</button>
+          <button type="button" class="btn-cancel" id="feed-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- TODAY TAB -->
+  <section id="tab-today" class="tab-content">
+    <div class="summary-cards">
+      <div class="card">
+        <div class="card-label">Total Sleep</div>
+        <div class="card-value" id="today-sleep-total">0h 0m</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Total Feeds</div>
+        <div class="card-value" id="today-feed-total">0 mL</div>
+      </div>
+    </div>
+    <h2>Timeline</h2>
+    <div id="timeline" class="timeline"></div>
+  </section>
+
+  <!-- TRENDS TAB -->
+  <section id="tab-trends" class="tab-content">
+    <div class="range-picker">
+      <button class="range-btn active" data-days="7">7 days</button>
+      <button class="range-btn" data-days="14">14 days</button>
+      <button class="range-btn" data-days="30">30 days</button>
+    </div>
+    <div class="chart-container">
+      <h3>Daily Sleep (hours)</h3>
+      <canvas id="sleep-chart"></canvas>
+    </div>
+    <div class="chart-container">
+      <h3>Daily Feeds (mL)</h3>
+      <canvas id="feed-chart"></canvas>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+  <script src="charts.js"></script>
+</body>
+</html>
