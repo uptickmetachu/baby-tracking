@@ -43,8 +43,8 @@
       <form id="sleep-form" class="entry-form hidden">
         <input type="hidden" id="sleep-edit-id">
         <div class="form-row">
-          <label>Start <input type="time" id="sleep-start" required></label>
-          <label>End <input type="time" id="sleep-end"></label>
+          <label>Start <select id="sleep-start" required></select></label>
+          <label>End <select id="sleep-end"></select></label>
         </div>
         <label>Note <input type="text" id="sleep-note" placeholder="Optional note"></label>
         <div class="form-actions">
@@ -65,7 +65,7 @@
       <form id="feed-form" class="entry-form hidden">
         <input type="hidden" id="feed-edit-id">
         <div class="form-row">
-          <label>Time <input type="time" id="feed-time" required></label>
+          <label>Time <select id="feed-time" required></select></label>
           <label>Volume (mL) <input type="number" id="feed-volume" min="0" step="5" required></label>
         </div>
         <label>Note <input type="text" id="feed-note" placeholder="Optional note"></label>

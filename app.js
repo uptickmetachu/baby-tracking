@@ -317,6 +317,29 @@ function escHtml(str) {
   return div.innerHTML;
 }
 
+// --- Populate time selects with 10-min increments ---
+function populateTimeSelect(select, includeEmpty) {
+  if (includeEmpty) {
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "--:--";
+    select.appendChild(opt);
+  }
+  for (let h = 0; h < 24; h++) {
+    for (let m = 0; m < 60; m += 10) {
+      const val = `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
+      const opt = document.createElement("option");
+      opt.value = val;
+      opt.textContent = formatTime12(val);
+      select.appendChild(opt);
+    }
+  }
+}
+
+populateTimeSelect(document.getElementById("sleep-start"), false);
+populateTimeSelect(document.getElementById("sleep-end"), true);
+populateTimeSelect(document.getElementById("feed-time"), false);
+
 // --- Init ---
 renderLog();
 
