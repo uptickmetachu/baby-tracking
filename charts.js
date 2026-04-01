@@ -1,6 +1,7 @@
 // --- Charts (Trends Tab) ---
 let sleepChart = null;
 let feedChart = null;
+let pumpChart = null;
 let currentRange = 7;
 
 // Range picker
@@ -33,6 +34,7 @@ function renderCharts() {
 
   const sleepData = [];
   const feedData = [];
+  const pumpData = [];
 
   dates.forEach((date) => {
     const data = getData(date);
@@ -43,6 +45,10 @@ function renderCharts() {
     let feedMl = 0;
     data.feeds.forEach((f) => { feedMl += f.volume; });
     feedData.push(feedMl);
+
+    let pumpMl = 0;
+    (data.pumps || []).forEach((p) => { pumpMl += p.volume; });
+    pumpData.push(pumpMl);
   });
 
   // Sleep chart
@@ -80,6 +86,30 @@ function renderCharts() {
         label: "Feeds (mL)",
         data: feedData,
         backgroundColor: "#e8913a",
+        borderRadius: 6,
+      }],
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, title: { display: true, text: "mL" } },
+        x: { ticks: { maxRotation: 45 } },
+      },
+    },
+  });
+
+  // Pump chart
+  const pumpCtx = document.getElementById("pump-chart").getContext("2d");
+  if (pumpChart) pumpChart.destroy();
+  pumpChart = new Chart(pumpCtx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Pumping (mL)",
+        data: pumpData,
+        backgroundColor: "#e85d9a",
         borderRadius: 6,
       }],
     },

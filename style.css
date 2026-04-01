@@ -15,6 +15,7 @@
   --border: #e0d8f0;
   --sleep-color: #8b6fc0;
   --feed-color: #e8913a;
+  --pump-color: #e85d9a;
   --danger: #d9534f;
   --radius: 12px;
 }
@@ -219,6 +220,10 @@ header h1 {
   gap: 12px;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .entry-form.hidden {
   display: none;
 }
@@ -326,6 +331,10 @@ header h1 {
 
 .timeline-item.feed {
   border-left-color: var(--feed-color);
+}
+
+.timeline-item.pump {
+  border-left-color: var(--pump-color);
 }
 
 .timeline-time {

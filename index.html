@@ -42,6 +42,7 @@
       <button id="add-sleep-btn" class="add-btn">+ Add Sleep</button>
       <form id="sleep-form" class="entry-form hidden">
         <input type="hidden" id="sleep-edit-id">
+        <label id="sleep-date-row" class="hidden">Date <input type="date" id="sleep-date"></label>
         <div class="form-row">
           <label>Start <input type="time" id="sleep-start" step="600" required></label>
           <label>End <input type="time" id="sleep-end" step="600"></label>
@@ -64,6 +65,7 @@
       <button id="add-feed-btn" class="add-btn">+ Add Feed</button>
       <form id="feed-form" class="entry-form hidden">
         <input type="hidden" id="feed-edit-id">
+        <label id="feed-date-row" class="hidden">Date <input type="date" id="feed-date"></label>
         <div class="form-row">
           <label>Time <input type="time" id="feed-time" step="600" required></label>
           <label>Volume (mL) <input type="number" id="feed-volume" min="0" step="5" required></label>
@@ -72,6 +74,28 @@
         <div class="form-actions">
           <button type="submit" class="btn-primary">Save</button>
           <button type="button" class="btn-cancel" id="feed-cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
+    <!-- Pumping Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Pumping</h2>
+        <span id="pump-total" class="daily-total"></span>
+      </div>
+      <div id="pump-list" class="entry-list"></div>
+      <button id="add-pump-btn" class="add-btn">+ Add Pumping</button>
+      <form id="pump-form" class="entry-form hidden">
+        <input type="hidden" id="pump-edit-id">
+        <label id="pump-date-row" class="hidden">Date <input type="date" id="pump-date"></label>
+        <div class="form-row">
+          <label>Time <input type="time" id="pump-time" step="600" required></label>
+          <label>Volume (mL) <input type="number" id="pump-volume" min="0" step="5" required></label>
+        </div>
+        <label>Note <input type="text" id="pump-note" placeholder="Optional note"></label>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Save</button>
+          <button type="button" class="btn-cancel" id="pump-cancel">Cancel</button>
         </div>
       </form>
     </div>
@@ -87,6 +111,10 @@
       <div class="card">
         <div class="card-label">Total Feeds</div>
         <div class="card-value" id="today-feed-total">0 mL</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Total Pumped</div>
+        <div class="card-value" id="today-pump-total">0 mL</div>
       </div>
     </div>
     <h2>Timeline</h2>
@@ -107,6 +135,10 @@
     <div class="chart-container">
       <h3>Daily Feeds (mL)</h3>
       <canvas id="feed-chart"></canvas>
+    </div>
+    <div class="chart-container">
+      <h3>Daily Pumping (mL)</h3>
+      <canvas id="pump-chart"></canvas>
     </div>
   </section>
 

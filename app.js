@@ -12,7 +12,7 @@ function storageKey(date) {
 
 function getData(date) {
   const raw = localStorage.getItem(storageKey(date));
-  return raw ? JSON.parse(raw) : { sleeps: [], feeds: [] };
+  return raw ? JSON.parse(raw) : { sleeps: [], feeds: [], pumps: [] };
 }
 
 function setData(date, data) {
@@ -90,6 +90,7 @@ const sleepList = document.getElementById("sleep-list");
 
 document.getElementById("add-sleep-btn").addEventListener("click", () => {
   resetSleepForm();
+  document.getElementById("sleep-date-row").classList.add("hidden");
   sleepForm.classList.remove("hidden");
 });
 
@@ -101,6 +102,7 @@ sleepForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const data = getData(currentDate);
   const editId = document.getElementById("sleep-edit-id").value;
+  const targetDate = document.getElementById("sleep-date").value || currentDate;
   const entry = {
     id: editId || uid(),
     start: document.getElementById("sleep-start").value,
@@ -109,19 +111,28 @@ sleepForm.addEventListener("submit", (e) => {
   };
 
   if (editId) {
-    const idx = data.sleeps.findIndex((s) => s.id === editId);
-    if (idx !== -1) data.sleeps[idx] = entry;
+    data.sleeps = data.sleeps.filter((s) => s.id !== editId);
+    setData(currentDate, data);
+    if (targetDate !== currentDate) {
+      const targetData = getData(targetDate);
+      targetData.sleeps.push(entry);
+      setData(targetDate, targetData);
+    } else {
+      data.sleeps.push(entry);
+      setData(currentDate, data);
+    }
   } else {
     data.sleeps.push(entry);
+    setData(currentDate, data);
   }
 
-  setData(currentDate, data);
   sleepForm.classList.add("hidden");
   renderLog();
 });
 
 function resetSleepForm() {
   document.getElementById("sleep-edit-id").value = "";
+  document.getElementById("sleep-date").value = currentDate;
   document.getElementById("sleep-start").value = "";
   document.getElementById("sleep-end").value = "";
   document.getElementById("sleep-note").value = "";
@@ -132,6 +143,8 @@ function editSleep(id) {
   const entry = data.sleeps.find((s) => s.id === id);
   if (!entry) return;
   document.getElementById("sleep-edit-id").value = entry.id;
+  document.getElementById("sleep-date").value = currentDate;
+  document.getElementById("sleep-date-row").classList.remove("hidden");
   document.getElementById("sleep-start").value = entry.start;
   document.getElementById("sleep-end").value = entry.end;
   document.getElementById("sleep-note").value = entry.note || "";
@@ -151,6 +164,7 @@ const feedList = document.getElementById("feed-list");
 
 document.getElementById("add-feed-btn").addEventListener("click", () => {
   resetFeedForm();
+  document.getElementById("feed-date-row").classList.add("hidden");
   feedForm.classList.remove("hidden");
 });
 
@@ -162,6 +176,7 @@ feedForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const data = getData(currentDate);
   const editId = document.getElementById("feed-edit-id").value;
+  const targetDate = document.getElementById("feed-date").value || currentDate;
   const entry = {
     id: editId || uid(),
     time: document.getElementById("feed-time").value,
@@ -170,19 +185,28 @@ feedForm.addEventListener("submit", (e) => {
   };
 
   if (editId) {
-    const idx = data.feeds.findIndex((f) => f.id === editId);
-    if (idx !== -1) data.feeds[idx] = entry;
+    data.feeds = data.feeds.filter((f) => f.id !== editId);
+    setData(currentDate, data);
+    if (targetDate !== currentDate) {
+      const targetData = getData(targetDate);
+      targetData.feeds.push(entry);
+      setData(targetDate, targetData);
+    } else {
+      data.feeds.push(entry);
+      setData(currentDate, data);
+    }
   } else {
     data.feeds.push(entry);
+    setData(currentDate, data);
   }
 
-  setData(currentDate, data);
   feedForm.classList.add("hidden");
   renderLog();
 });
 
 function resetFeedForm() {
   document.getElementById("feed-edit-id").value = "";
+  document.getElementById("feed-date").value = currentDate;
   document.getElementById("feed-time").value = "";
   document.getElementById("feed-volume").value = "";
   document.getElementById("feed-note").value = "";
@@ -193,6 +217,8 @@ function editFeed(id) {
   const entry = data.feeds.find((f) => f.id === id);
   if (!entry) return;
   document.getElementById("feed-edit-id").value = entry.id;
+  document.getElementById("feed-date").value = currentDate;
+  document.getElementById("feed-date-row").classList.remove("hidden");
   document.getElementById("feed-time").value = entry.time;
   document.getElementById("feed-volume").value = entry.volume;
   document.getElementById("feed-note").value = entry.note || "";
@@ -202,6 +228,84 @@ function editFeed(id) {
 function deleteFeed(id) {
   const data = getData(currentDate);
   data.feeds = data.feeds.filter((f) => f.id !== id);
+  setData(currentDate, data);
+  renderLog();
+}
+
+// --- Pump CRUD ---
+const pumpForm = document.getElementById("pump-form");
+const pumpList = document.getElementById("pump-list");
+
+document.getElementById("add-pump-btn").addEventListener("click", () => {
+  resetPumpForm();
+  document.getElementById("pump-date-row").classList.add("hidden");
+  pumpForm.classList.remove("hidden");
+});
+
+document.getElementById("pump-cancel").addEventListener("click", () => {
+  pumpForm.classList.add("hidden");
+});
+
+pumpForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const data = getData(currentDate);
+  if (!data.pumps) data.pumps = [];
+  const editId = document.getElementById("pump-edit-id").value;
+  const targetDate = document.getElementById("pump-date").value || currentDate;
+  const entry = {
+    id: editId || uid(),
+    time: document.getElementById("pump-time").value,
+    volume: parseInt(document.getElementById("pump-volume").value, 10),
+    note: document.getElementById("pump-note").value.trim(),
+  };
+
+  if (editId) {
+    data.pumps = data.pumps.filter((p) => p.id !== editId);
+    setData(currentDate, data);
+    if (targetDate !== currentDate) {
+      const targetData = getData(targetDate);
+      if (!targetData.pumps) targetData.pumps = [];
+      targetData.pumps.push(entry);
+      setData(targetDate, targetData);
+    } else {
+      data.pumps.push(entry);
+      setData(currentDate, data);
+    }
+  } else {
+    data.pumps.push(entry);
+    setData(currentDate, data);
+  }
+
+  pumpForm.classList.add("hidden");
+  renderLog();
+});
+
+function resetPumpForm() {
+  document.getElementById("pump-edit-id").value = "";
+  document.getElementById("pump-date").value = currentDate;
+  document.getElementById("pump-time").value = "";
+  document.getElementById("pump-volume").value = "";
+  document.getElementById("pump-note").value = "";
+}
+
+function editPump(id) {
+  const data = getData(currentDate);
+  if (!data.pumps) return;
+  const entry = data.pumps.find((p) => p.id === id);
+  if (!entry) return;
+  document.getElementById("pump-edit-id").value = entry.id;
+  document.getElementById("pump-date").value = currentDate;
+  document.getElementById("pump-date-row").classList.remove("hidden");
+  document.getElementById("pump-time").value = entry.time;
+  document.getElementById("pump-volume").value = entry.volume;
+  document.getElementById("pump-note").value = entry.note || "";
+  pumpForm.classList.remove("hidden");
+}
+
+function deletePump(id) {
+  const data = getData(currentDate);
+  if (!data.pumps) return;
+  data.pumps = data.pumps.filter((p) => p.id !== id);
   setData(currentDate, data);
   renderLog();
 }
@@ -256,6 +360,30 @@ function renderLog() {
     .join("");
 
   document.getElementById("feed-total").textContent = totalFeedMl > 0 ? `${totalFeedMl} mL` : "";
+
+  // Pumps
+  const pumps = data.pumps || [];
+  let totalPumpMl = 0;
+  pumpList.innerHTML = pumps
+    .map((p) => {
+      totalPumpMl += p.volume;
+      const noteHtml = p.note ? `<div class="entry-note">${escHtml(p.note)}</div>` : "";
+      return `
+        <div class="entry-item">
+          <div class="entry-info">
+            <div class="entry-time">${formatTime12(p.time)}</div>
+            <div class="entry-detail">${p.volume} mL</div>
+            ${noteHtml}
+          </div>
+          <div class="entry-actions">
+            <button class="btn-edit" onclick="editPump('${p.id}')" aria-label="Edit">&#9998;</button>
+            <button class="btn-delete" onclick="deletePump('${p.id}')" aria-label="Delete">&times;</button>
+          </div>
+        </div>`;
+    })
+    .join("");
+
+  document.getElementById("pump-total").textContent = totalPumpMl > 0 ? `${totalPumpMl} mL` : "";
 }
 
 // --- Render Today Tab ---
@@ -269,8 +397,12 @@ function renderToday() {
   let totalFeedMl = 0;
   data.feeds.forEach((f) => { totalFeedMl += f.volume; });
 
+  let totalPumpMl = 0;
+  (data.pumps || []).forEach((p) => { totalPumpMl += p.volume; });
+
   document.getElementById("today-sleep-total").textContent = formatDuration(totalSleepMin);
   document.getElementById("today-feed-total").textContent = `${totalFeedMl} mL`;
+  document.getElementById("today-pump-total").textContent = `${totalPumpMl} mL`;
 
   // Timeline
   const items = [];
@@ -279,6 +411,9 @@ function renderToday() {
   });
   data.feeds.forEach((f) => {
     items.push({ type: "feed", sortTime: f.time, html: buildTimelineItem(f, "feed") });
+  });
+  (data.pumps || []).forEach((p) => {
+    items.push({ type: "pump", sortTime: p.time, html: buildTimelineItem(p, "pump") });
   });
   items.sort((a, b) => a.sortTime.localeCompare(b.sortTime));
 
@@ -296,9 +431,12 @@ function buildTimelineItem(entry, type) {
     time = formatTime12(entry.start);
     const dur = minutesBetween(entry.start, entry.end);
     desc = `Sleep${entry.end ? " — " + formatDuration(dur) : " (ongoing)"}`;
-  } else {
+  } else if (type === "feed") {
     time = formatTime12(entry.time);
     desc = `Feed — ${entry.volume} mL`;
+  } else {
+    time = formatTime12(entry.time);
+    desc = `Pump — ${entry.volume} mL`;
   }
   const noteHtml = entry.note ? `<div class="timeline-note">${escHtml(entry.note)}</div>` : "";
   return `
