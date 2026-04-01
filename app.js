@@ -84,6 +84,29 @@ document.getElementById("date-next").addEventListener("click", () => {
   renderLog();
 });
 
+// --- Swipe Navigation ---
+(function () {
+  const logTab = document.getElementById("tab-log");
+  let startX = 0;
+  let startY = 0;
+
+  logTab.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  logTab.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx)) return;
+    if (dx < 0) {
+      document.getElementById("date-next").click();
+    } else {
+      document.getElementById("date-prev").click();
+    }
+  }, { passive: true });
+})();
+
 // --- Sleep CRUD ---
 const sleepForm = document.getElementById("sleep-form");
 const sleepList = document.getElementById("sleep-list");
