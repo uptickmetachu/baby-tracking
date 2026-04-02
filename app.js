@@ -2,8 +2,15 @@
 let currentDate = todayStr();
 
 // --- Helpers ---
+function localDateStr(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 function todayStr() {
-  return new Date().toISOString().slice(0, 10);
+  return localDateStr(new Date());
 }
 
 function storageKey(date) {
@@ -69,17 +76,17 @@ dateInput.addEventListener("change", () => {
 });
 
 document.getElementById("date-prev").addEventListener("click", () => {
-  const d = new Date(currentDate);
+  const d = new Date(currentDate + "T00:00:00");
   d.setDate(d.getDate() - 1);
-  currentDate = d.toISOString().slice(0, 10);
+  currentDate = localDateStr(d);
   dateInput.value = currentDate;
   renderLog();
 });
 
 document.getElementById("date-next").addEventListener("click", () => {
-  const d = new Date(currentDate);
+  const d = new Date(currentDate + "T00:00:00");
   d.setDate(d.getDate() + 1);
-  currentDate = d.toISOString().slice(0, 10);
+  currentDate = localDateStr(d);
   dateInput.value = currentDate;
   renderLog();
 });
